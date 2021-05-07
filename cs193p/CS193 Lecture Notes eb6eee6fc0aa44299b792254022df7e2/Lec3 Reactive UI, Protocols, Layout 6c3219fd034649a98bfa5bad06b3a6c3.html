@@ -1,0 +1,720 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lec3 Reactive UI, Protocols, Layout</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="6c3219fd-0346-49a9-8bfa-5bad06b3a6c3" class="page sans"><header><img class="page-cover-image" src="https://www.notion.so/images/page-cover/woodcuts_6.jpg" style="object-position:center 0%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">3️⃣</span></div><h1 class="page-title">Lec3 Reactive UI, Protocols, Layout</h1></header><div class="page-body"><figure id="f190020a-3d6a-4e8d-9a02-ff618bb1c0cc"><div class="source"><a href="https://www.youtube.com/watch?v=SIYdYpPXil4&amp;list=PLpGHT1n4-mAtTj9oywMWoBx0dCGd51_yG&amp;index=13">https://www.youtube.com/watch?v=SIYdYpPXil4&amp;list=PLpGHT1n4-mAtTj9oywMWoBx0dCGd51_yG&amp;index=13</a></div></figure><p id="f3fbfe33-02b4-4038-96fa-6ce63e58c8d2" class="">
+</p><ul id="e1fc0bac-794c-4e68-8fb7-b02ddbd84bab" class="toggle"><li><details open=""><summary><strong>Reactive Demo</strong></summary><p id="e624c637-6fa7-489d-9b89-25dc866d6a0b" class=""><em><strong>ViewModel</strong></em></p><pre id="81439142-be13-4c06-a99f-d3905fd392de" class="code"><code>class EmojiMemoryGame {
+	private var model: MemoryGame&lt;String&gt; = EmojiMemoryGame.createMemoryGame()
+	static func createMemoryGame() -&gt; MemoryGame&lt;String&gt; {
+        let emojis: Array&lt;String&gt; = [&quot;🥰&quot;, &quot;😡&quot;, &quot;😅&quot;]
+        return MemoryGame&lt;String&gt;(numberOfPairsOfCards: emojis.count) { pairIndex in
+            return emojis[pairIndex]
+        }
+    }
+    
+    // MARK: - Access to the Model
+    var cards: Array&lt;MemoryGame&lt;String&gt;.Card&gt; {
+        model.cards
+    }
+    
+    // MARK: - Intent
+    func choose(card: MemoryGame&lt;String&gt;.Card) {
+        model.choose(card: card);
+    }
+}</code></pre><p id="ca5bf462-795c-4e48-b45e-b0e3bd659180" class="">
+</p><p id="500c9c15-db30-4a80-8ba0-d942311a50ef" class=""><em>To create local variable:</em></p><pre id="e8664cd5-7d4a-46c7-8df6-edaf56e9f62b" class="code"><code>var x: Int { return 1024 } // &quot;computed property&quot;</code></pre><p id="4c881307-9c23-4442-a266-c0017d2f93ea" class="">
+</p><h3 id="ea9b5d25-18d4-49a2-93bc-85b63c2dab80" class="">Refactoring</h3><p id="bb4eee55-c872-41bb-837d-fe40dd889edc" class="">To change the name of a </p><p id="a2f2305b-5f14-4e64-9b15-670947b03cf2" class=""><code>command</code> + click → refactor</p><p id="2315bc59-d0c9-41f3-a99c-3d94f7b5d045" class="">
+</p><h3 id="674446ab-0a38-468b-bb66-7d3fd330493f" class="">ObservableObject</h3><pre id="96856029-7b4d-4ce1-aa3a-1ac30e7867f8" class="code"><code>class EmojiMemoryGame: ObservableObject {
+	@Published private var viewModel: MemoryGame&lt;String&gt; = EmojiMemoryGame.createMemoryGame()
+	...
+}</code></pre><p id="b07caeec-e897-432a-a60f-61d87c39b12d" class=""><code>@Published</code> &amp; <code>@ObservedObject</code> are <mark class="highlight-yellow_background"><strong>property wrappers</strong></mark>.</p><pre id="b8e226a0-34e8-48f7-b29a-25dd2ed6a139" class="code"><code>struct EmojiMemoryGameView: View {
+	@ObservedObject var viewModel: EmojiMemoryGame
+	...
+}</code></pre><p id="49544259-fbe4-41ae-bac5-93001532787e" class="">
+</p><p id="af47305c-3cfe-4839-adfc-54de01c6485b" class=""><em>*Alternatively, we can call: </em></p><pre id="77b24723-07ba-4d38-9287-827351cf22bd" class="code"><code>func choose(card: MemoryGame&lt;String&gt;.Card) {
+	objectWillChange.send()
+	viewModel.choose(card: card)
+}</code></pre><p id="e9ec3219-2f10-4955-8f65-3c319bdd54e4" class="">
+</p></details></li></ul><ul id="5b49b56f-fae2-4c6d-b7da-e9efb7b06d57" class="toggle"><li><details open=""><summary><strong>Protocol</strong></summary><p id="ab8008fc-7b3b-4748-8b9f-3c58c8c1ebe4" class="">a protocol is sort of a &quot;stripped-down&quot; struct / class</p><ul id="6dc5c66e-d16f-4c71-aff2-e6b4da3e8246" class="bulleted-list"><li>It has functions and vars, but NO implementation (or storage)</li></ul><pre id="5d3e7132-4caa-48b8-ba09-9face047dc94" class="code"><code>protocol Moveable {
+	func move(by: Int)
+	var hasMoved: Bool { get }
+	var distanceFromStart: Int { get set }
+}
+
+// ... now any other types can claim to implement Moveable
+
+struct PortableThing: Moveable { // comforms to Moveable protocol
+	// MUST implement move(by:), hasMoved &amp; distanceFromStart here
+}
+</code></pre><h3 id="3bed7122-9877-4b2d-95e1-9d64df8466ff" class="">Protocol Inheritance</h3><pre id="6fcba265-4f98-4f08-8b1b-fd8e15f3bb1c" class="code"><code>protocol Vehicle: Moveable {
+	var passengerCount: Int { get set }
+}
+
+// ... implementing multiple protocols
+class Car: Vehicle, Impoundable, Leasable {
+	// MUST implement everything from Vehicle, Impoundable, Leasable here
+}</code></pre><h3 id="d929722a-9b0f-43fd-a064-413d2b5f1655" class="">Protocol Extension</h3><pre id="ce77f569-a6a7-48e5-ba68-e392dc99a87c" class="code"><code>struct Tesla: Vehicle {
+
+}
+
+extension Vehicle {
+	func registerWithDMV() { /* implementation here */ }
+}</code></pre><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="dba511f8-897d-43e3-8ba4-f2537d1d374f"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Of course, you can use an extension to add things to <code>struct</code> and <code>class</code> too!</div></figure><p id="234a10a6-4999-4626-956b-6c908b86337d" class="">
+</p><h3 id="25b0f40c-68bc-4112-a60a-ae1dc6211fdf" class="">Why protocols?</h3><ul id="a46a21c5-fad1-44df-bd11-4659deece605" class="bulleted-list"><li>A way for types (struct/class/other protocols) to <span style="border-bottom:0.05em solid">say what they are capable of</span></li></ul><ul id="3285e085-d773-4ffe-b7a0-e98003a6a24b" class="bulleted-list"><li>For other code to <span style="border-bottom:0.05em solid">demand certain behaviour </span>out of another type</li></ul><ul id="07228d51-5299-4e0e-a7fc-c9b799ae5386" class="bulleted-list"><li>&quot;<strong>functional programming</strong>&quot;: formalizing how data structures in our application function</li></ul><ul id="1a4295e2-f834-42fb-97f8-6688aecf9d35" class="bulleted-list"><li><span style="border-bottom:0.05em solid">Focus on the functionality</span> and <span style="border-bottom:0.05em solid">hide the implementation details behind</span> it</li></ul><ul id="e8702e03-bf31-4cf7-973b-c6caf94e9b3a" class="bulleted-list"><li>The promise of encapsulation from OOP (taken to a higher level)</li></ul><h3 id="be3b5bc0-255e-44c6-a432-cfa54b518e6c" class="">Generics &amp; Protocols</h3><pre id="be0eb217-b036-4f0e-8642-1608e6377de8" class="code"><code>protocol Greatness {
+	func isGreaterThan(other: Self) -&gt; Bool
+}
+extension Array where Element: Greatness {
+	var greatest: Element {
+		// for-loop through all the Elements
+		// return the greatest by calling isGreaterThan on each Element
+	}
+}</code></pre><p id="7ed6b450-32aa-4354-b1bd-287e6578d4cf" class="">
+</p></details></li></ul><ul id="41d18593-eede-450c-9765-7aced026457a" class="toggle"><li><details open=""><summary><strong>View Layout</strong></summary><hr id="5f0ac503-2333-4fe8-8837-e7bf5d4cd4ef"/><p id="f6242ade-9080-4ba3-b6be-45cc1f5ff0d6" class="">💡 <strong>How is the space on-screen apportioned to the Views?</strong></p><ol id="7dfeb757-ac81-4275-998f-b6ff99cdd688" class="numbered-list" start="1"><li>Container Views &quot;offer&quot; space to the Views inside them</li></ol><ol id="6995fb1c-486a-458e-8e23-01d66db56281" class="numbered-list" start="2"><li>Views then choose what size they want to be</li></ol><ol id="80371508-9729-428d-be72-777203bdf47b" class="numbered-list" start="3"><li>Container Views then position the Views inside of them</li></ol><p id="1ef0d74e-d8ec-45be-bd4d-deedf4853998" class="">
+</p><p id="824906d7-fa44-44ca-b81d-9624ea79e3a3" class="">💡 <strong>Container Views:</strong></p><ul id="d6b1623c-63b7-4622-b249-8fdd6a3d7f2a" class="bulleted-list"><li>The &quot;stacks&quot; (HStack, VStack, ZStack) devide up the space offered to them amongst their subviews</li></ul><ul id="07f7ceed-b3dd-4608-b683-689b8373be44" class="bulleted-list"><li>ForEach defers to its container to lay out the Views inside of it</li></ul><ul id="9c96b521-6257-494d-8e73-e604a7778d7c" class="bulleted-list"><li>Modifiers (e.g. <code>.padding()</code>) essentially &quot;contain&quot; the View they modify. Some do layout</li></ul><p id="b80353f1-9930-447c-aa01-2424b5cd4e34" class="">
+</p><h3 id="b22d13cb-9115-4211-88af-7dcd5467589f" class="">HStack &amp; VStack</h3><p id="0d3e1471-464a-4438-a28e-ccc40b901c99" class="">Stacks divide up the space that is offered to them and then offer that to the Views inside.</p><p id="2248cb63-f3e0-4a50-a910-bb575a9106da" class="">It offers space to its &quot;<strong><span style="border-bottom:0.05em solid">least flexible</span></strong>&quot;(with respect to sizing) subviews first.</p><p id="c9f9be54-4384-4b0a-9100-8ca82777933d" class=""><code>Image</code> : inflexible (fixed size)</p><p id="6a9dff44-accc-442a-a5fb-39c13ae773f4" class=""><code>Text</code> : slightly more flexible</p><p id="ebffa74a-85ee-438f-9f4a-1a4351f00150" class=""><code>RoundedRectangle</code> : very flexible</p><p id="c2a454dd-30a0-4786-bdaa-618c3957fb2a" class="">After the Views inside the stack choose their own size, the stack sizes itself to fit them.</p><p id="9f858618-c358-4f6d-91a5-232bc4aa33d7" class="">
+</p><p id="fefd6821-8acb-4443-a445-6608ffa1f194" class=""><code>Spacer(minLength: CGFloat)</code></p><p id="bae5a100-fc23-46a2-9bf9-27b88bffc4e5" class="">Always takes all the space offered to it, but draws nothing</p><p id="811d6c6c-ee32-4c83-8b4c-278d081b9d5c" class="">
+</p><p id="624ff8ca-ef9d-4b14-b09e-2627323c5cfc" class=""><code>Divider()</code></p><p id="c60a8238-8cf3-40ca-9345-de2f83d76489" class="">Draws a dividing line cross-wise to the way the stack is laying out</p><p id="f586c33a-eca8-4aaa-8eb1-0db49083a939" class="">
+</p><p id="d40d9ec2-fa5d-43dc-a979-662af72956e9" class=""><code>.layoutPriority(Double)</code></p><ul id="ba42367a-180e-431b-ad51-84eda5690466" class="bulleted-list"><li>Stack&#x27;s choice of who to offer space to next can be overridden with </li></ul><ul id="bee9811a-04c1-428e-8066-d50aa56fac65" class="bulleted-list"><li>It trumps &quot;least flexible&quot;</li></ul><pre id="dc767783-771e-4233-a7bc-3d08ff742360" class="code"><code>HStack {
+	Text(&quot;Important&quot;).layoutPriority(100)
+	Image(systemName: &quot;arraw.up&quot;) // the default layout priority = 0
+	Text(&quot;Unimportant&quot;)
+}</code></pre><p id="76183edf-8dc1-4386-9325-3b357ca53383" class="">If a Text doesn&#x27;t get enough space, it will <strong><em>elide</em></strong> (i.e. &quot;Import...&quot;)</p><p id="93ccf27b-a861-4d8a-bedb-b484b0592d23" class="">
+</p><h3 id="8c1739c5-192e-46c4-8a51-4b12caea2c33" class="">Alignment</h3><pre id="58227563-934c-4d7a-a8b0-773b389c0bbc" class="code"><code>VStack(alignment: .leading) { ... }
+HStack(alignment: .firstTextBaseline) { ... }</code></pre><p id="dd92119e-8a33-47a0-84c3-d06c8db07f8a" class="">
+</p><p id="8217beb8-41c5-4077-b30a-48c2427e77b0" class="">💡 <strong>Why </strong><strong><code>.leading</code></strong><strong> &amp; </strong><strong><code>.trailing</code></strong><strong> instead of &quot;.left&quot; &amp; &quot;.right&quot;?</strong></p><p id="4bf7fdb2-b219-4aaf-9f2c-ac4ac5c3338f" class="">Because in some languages text start from right to left (e.g. Arabics, Hebrew)</p><p id="b45463c5-089b-4358-8221-bfcbf641dac6" class="">
+</p><h3 id="12663294-48ad-43e9-8743-f03d5364c9bd" class="">Modifier</h3><p id="1f3a4c7a-c122-49e8-a06b-06cd8bc482a1" class=""><code>.aspectRatio</code> : picks a size for itself that is either smaller (<code>.fit</code>) or bigger (<code>.fill</code>)</p><p id="32e4aaba-12f8-4dda-840c-e50a1d1a58da" class="">
+</p><pre id="23007d60-805e-446d-86b0-238e8c5a676b" class="code"><code>HStack { // ASIDE: the defaiult alignment here is .center
+	ForEach(viewModel.cards) { card in
+		CardView(card: card).aspectRatio(2/3, contentMode: .fit)
+	}
+}
+	.foregroundColor(Color.orange)
+	.padding(10)</code></pre><figure id="8625fa72-696d-49df-92c5-b6ca036dc44a" class="image"><a href="Lec3%20Reactive%20UI,%20Protocols,%20Layout%206c3219fd034649a98bfa5bad06b3a6c3/Screen_Shot_2021-04-24_at_10.58.11_PM.png"><img style="width:1192px" src="Lec3%20Reactive%20UI,%20Protocols,%20Layout%206c3219fd034649a98bfa5bad06b3a6c3/Screen_Shot_2021-04-24_at_10.58.11_PM.png"/></a></figure><h3 id="462bc1ae-22e8-438d-b0c9-c892b93f63bf" class="">GeometryReader</h3><pre id="410ce201-f46d-475d-8dd6-66fae35d5490" class="code"><code>struct GeometryProxy {
+	var size: CGSize
+	func frame(in: CoordinateSpace) -&gt; CGRect
+	var safeAreaInsets: EdgeInsets
+}</code></pre></details></li></ul><p id="782dd6b2-13da-418d-9c46-dbb7891690f9" class="">
+</p><h3 id="9885039b-cd17-4bc5-bf59-bb5273393897" class="">Safe Area</h3><pre id="7de3e3c0-88c9-4268-a2ba-f85889f3c7f4" class="code"><code>ZStack { ... }.edgesIgnoringSafeArea([.top, .bottom])</code></pre><p id="806969a5-0bc1-42a0-8147-d1f2f70fafd6" class="">
+</p><h3 id="b092e597-4c08-4a3a-b713-1cd32033d059" class="">Container</h3><p id="c2cb432a-96db-4aeb-8d93-adbfdf65864e" class=""><code>.frame</code></p><p id="e5e0f61e-d44f-41c2-96c5-b52b66f36694" class=""><code>.position(CGPoint)</code></p></div></article></body></html>

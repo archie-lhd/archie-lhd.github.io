@@ -1,0 +1,704 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lec2: MVVM and the Swift Type System</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="4b7f8476-caaa-4ad8-804c-c4b887e128fd" class="page sans"><header><img class="page-cover-image" src="https://images.unsplash.com/photo-1515534238346-fb9ae3e399d0?ixlib=rb-1.2.1&amp;q=85&amp;fm=jpg&amp;crop=entropy&amp;cs=srgb" style="object-position:center 50%"/><div class="page-header-icon page-header-icon-with-cover"><span class="icon">2️⃣</span></div><h1 class="page-title">Lec2: MVVM and the Swift Type System</h1></header><div class="page-body"><figure id="c2958521-74ea-4e3c-a665-f4946b069fc7"><div class="source"><a href="https://www.youtube.com/watch?v=4GjXq2Sr55Q">https://www.youtube.com/watch?v=4GjXq2Sr55Q</a></div></figure><figure id="b1c9d92a-b532-4cd6-aa60-09aecbffa47c"><div class="source"><a href="Lec2%20MVVM%20and%20the%20Swift%20Type%20System%204b7f8476caaa4ad8804cc4b887e128fd/l2.pdf">https://s3-us-west-2.amazonaws.com/secure.notion-static.com/cd369464-4809-481c-bf37-270e34365037/l2.pdf</a></div></figure><p id="3c23251b-e934-49fd-ab56-d0ec5618f1e0" class=""><strong>SwiftUI Architecture:</strong></p><ul id="f8d284d3-2409-4e76-b679-55be30e1c3ca" class="toggle"><li><details open=""><summary><strong>MVVM</strong></summary><hr id="48d72532-2970-49af-897a-d9714d447435"/><p id="4c4f8200-5811-4802-8a12-5a137eadb3b0" class="">(Model-View-ViewModel)</p><ul id="ad62acb1-a3b5-445b-9c63-aba6d2fe3828" class="bulleted-list"><li>A &quot;code organizing&quot; architectural design paradigm.</li></ul><ul id="c2b49276-08d9-4e14-ab63-cd1da0fc6865" class="bulleted-list"><li>Works in concert with the concept of &quot;<strong><span style="border-bottom:0.05em solid">reactive</span></strong>&quot; user-interfaces.</li></ul><ul id="71676c12-78e6-406c-846d-f700b31d7f18" class="bulleted-list"><li>Must be adhered to for SwiftUI to work.</li></ul><ul id="471ff5b9-efe3-4376-9f26-7b020c4013de" class="bulleted-list"><li>Different from MVC (Model-View-Controller) which UIKit uses.</li></ul><figure id="89c11844-05a8-42ed-9250-cf975a36afb4" class="image"><a href="Lec2%20MVVM%20and%20the%20Swift%20Type%20System%204b7f8476caaa4ad8804cc4b887e128fd/Screen_Shot_2021-04-24_at_9.01.04_AM.png"><img style="width:1660px" src="Lec2%20MVVM%20and%20the%20Swift%20Type%20System%204b7f8476caaa4ad8804cc4b887e128fd/Screen_Shot_2021-04-24_at_9.01.04_AM.png"/></a><figcaption>Model → ViewModel → View</figcaption></figure><figure id="bad3c301-f4e2-4aea-83e2-ccedf9bbf4c2" class="image"><a href="Lec2%20MVVM%20and%20the%20Swift%20Type%20System%204b7f8476caaa4ad8804cc4b887e128fd/Screen_Shot_2021-04-24_at_9.33.37_AM.png"><img style="width:1658px" src="Lec2%20MVVM%20and%20the%20Swift%20Type%20System%204b7f8476caaa4ad8804cc4b887e128fd/Screen_Shot_2021-04-24_at_9.33.37_AM.png"/></a><figcaption>View → ViewModel → Model</figcaption></figure><ul id="2c22605b-b212-4ef1-8bcc-de54e3c427be" class="bulleted-list"><li>SwiftUI is &quot;<span style="border-bottom:0.05em solid"><strong>declarative</strong></span>&quot;: time independent</li></ul><ul id="d01b425a-4fd3-435e-9882-c5f31b802553" class="bulleted-list"><li>UIKit is &quot;<span style="border-bottom:0.05em solid"><strong>imperative</strong></span>&quot;: need time info to know when to call functions; hard to manage</li></ul><p id="3299ad76-ceab-4a1c-9da5-9e9177299fe2" class="">
+</p></details></li></ul><ul id="59a19fe0-e3f8-46d8-a659-59967f2930f8" class="toggle"><li><details open=""><summary><strong>Varieties of Types</strong></summary><ul id="a7357fc5-5148-463c-89fb-001e8696349d" class="bulleted-list"><li>struct</li></ul><ul id="4710cabe-3d0b-42c7-8629-fc21c3e13337" class="bulleted-list"><li>class</li></ul><ul id="a608c525-b05c-407b-8a28-d6fafbfd5bb5" class="bulleted-list"><li>protocol</li></ul><ul id="7bca388f-f620-4695-a381-fb9df45a1471" class="bulleted-list"><li>&quot;don&#x27;t care&quot;-type (aka. generics)</li></ul><ul id="8484d4be-69fc-4d4d-b4ae-379969787b4a" class="bulleted-list"><li>enum</li></ul><ul id="df0da8ec-6128-41aa-bcfa-ad70df9a16ff" class="bulleted-list"><li>functions</li></ul></details></li></ul><p id="7e0de5db-2533-415b-b1ab-6311ac8a2d18" class="">
+</p><p id="26cc0751-c615-46ba-a929-3c9e996b1ef7" class=""><strong>Introducing 3 Types</strong></p><ul id="60e34f22-080b-4b40-a90e-0568b437f9a2" class="toggle"><li><details open=""><summary>Struct &amp; Class</summary><hr id="da0802a5-5586-4c1d-877e-01abbb6233fc"/><h3 id="a104ce3b-5aa4-47a8-8086-ca25b558c60b" class="">&gt; Similarities:</h3><ul id="f400a857-e2b8-4c64-9ac1-36109937fc40" class="bulleted-list"><li>pretty much exactly the same syntax</li></ul><ul id="12089c49-4c5c-443e-b24f-a7ea471f2fcd" class="bulleted-list"><li>stored <code>var</code></li></ul><ul id="c88ffef4-c799-4d4c-bb2e-5bf2f7969621" class="bulleted-list"><li>computed <code>var</code></li></ul><ul id="4636b300-3207-4528-a2d0-06c3a412fa11" class="bulleted-list"><li>constant <code>let</code></li></ul><ul id="fe736c0c-ced0-4d17-81b0-423a4d3eabcd" class="bulleted-list"><li><code>func</code> tions</li></ul><ul id="a718d5bd-8421-4fc6-a1d1-822f3c679a53" class="bulleted-list"><li><code>init</code>tializers (i.e. special functions called when creating a <strong>struct</strong> or <strong>class</strong></li></ul><p id="e05f6600-99ba-4689-923d-3b10ad17422f" class="">
+</p><h3 id="4ceb5aec-80ce-4522-94c1-035a0d714611" class="">&gt; Differences:</h3><div id="27e84334-033b-404f-9902-0d0ae06a71e4" class="column-list"><div id="9e762770-cf13-43a9-82d8-4090d40d68cd" style="width:50%" class="column"><h3 id="142a19a5-74c6-40af-b933-9ddd455f884d" class="block-color-red"><strong>struct</strong></h3><ul id="74899030-4f91-4eb3-a003-2c083c2a153e" class="bulleted-list"><li>Value type</li></ul><ul id="fd754aba-61b4-4e73-8fac-e49f0f3cecbe" class="bulleted-list"><li><span style="border-bottom:0.05em solid"><strong>Copied</strong></span> when passed or assigned</li></ul><ul id="cc31908a-350e-47f2-9e92-6d99eed26183" class="bulleted-list"><li>Copy on write</li></ul><ul id="98293792-eddd-4abf-a982-4184ec1e70a6" class="bulleted-list"><li>Functional programming</li></ul><ul id="043d9006-41a9-47bd-8a8d-bf0b9be2cac9" class="bulleted-list"><li>No inheritance</li></ul><ul id="b0e056e5-889f-42c7-b251-6c1ce423ed23" class="bulleted-list"><li>&quot;Free&quot; <code>init</code> initializes ALL vars</li></ul><ul id="620f7ef7-2f0e-4d34-8906-7c136c5aebc7" class="bulleted-list"><li>Mutability must be explicitly stated by <code>@State</code></li></ul><ul id="9b046546-4ba1-4e9e-b033-182a26cf1462" class="bulleted-list"><li>Your &quot;go to&quot; data structure</li></ul><ul id="85f31364-6525-43da-a810-e12a47a4a4f9" class="bulleted-list"><li>Everything you&#x27;ve seen so far is a <mark class="highlight-yellow_background"><strong>struct</strong></mark> (except View which is a <code>protocol</code>)</li></ul><p id="8be3f2f2-d45c-41bc-a1ed-0e7ab586f94d" class="">
+</p></div><div id="11c83807-61ab-4888-9bd3-47c1ec86076a" style="width:50%" class="column"><h3 id="c4fc8eef-ebdb-461f-8462-1928dde08db5" class="block-color-blue"><strong>class</strong></h3><ul id="93539215-59e6-468a-9db8-519c1460d419" class="bulleted-list"><li>Reference type</li></ul><ul id="179eccec-a8b2-4647-836a-0ea21781dda9" class="bulleted-list"><li>Passed around via <strong><span style="border-bottom:0.05em solid">pointers</span></strong></li></ul><ul id="9139ca22-c91e-4193-96f0-c4a0446530c5" class="bulleted-list"><li>Automatically reference counted</li></ul><ul id="c7988864-713b-4aa4-bff4-42cc9d84dd87" class="bulleted-list"><li>Object-oriented programming</li></ul><ul id="08a2080d-7a1d-4574-9771-ff550d739d41" class="bulleted-list"><li>Inheritance (single)</li></ul><ul id="04d59801-beb0-4f0f-86c2-684b0c230240" class="bulleted-list"><li>&quot;Free&quot; <code>init</code> initializes NO vars </li></ul><ul id="15ad15e3-b896-4644-b9bc-acb71201fdf0" class="bulleted-list"><li>Always mutable</li></ul><ul id="61559983-62ae-422b-9c38-f408adb07ad6" class="bulleted-list"><li>Used in specific circumstances</li></ul><ul id="0079eb52-b787-450c-8bd3-4432d379f6e6" class="bulleted-list"><li>The ViewModel in MVVM is always a <code>class</code></li></ul><ul id="dddd0ba0-ca72-41ae-8daf-cfc8068bc48f" class="bulleted-list"><li>(UIKit is <mark class="highlight-yellow_background">class-based</mark>)</li></ul></div></div><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="9a71245b-e66b-4cac-b6e3-567da6a1b88f"><div style="font-size:1.5em"><span class="icon">✅</span></div><div style="width:100%">The biggest strength of <mark class="highlight-yellow_background"><strong>class</strong></mark>: easy to share between different Views, because it&#x27;s stored in <strong><em>heap</em></strong></div></figure></details></li></ul><ul id="23eb2bb0-4e72-4415-83cb-e2eb05129532" class="toggle"><li><details open=""><summary>Generics</summary><hr id="660332be-92db-4120-9463-ed25cdf69c35"/><p id="b9a7bf1d-ec49-4f21-9372-9c3a2a809a12" class=""><mark class="highlight-yellow_background"><em>Example of a user of a &quot;don&#x27;t care&quot; type: </em></mark><mark class="highlight-yellow_background"><em><strong>Array</strong></em></mark></p><ul id="65c72344-8933-4585-8e4d-9ce0bb639c55" class="bulleted-list"><li>An Array contains a bunch of things and it doesn’t care at all what type they are!
+But inside Array’s code, it has to have variables for the things it contains. They need types.</li></ul><ul id="ee7c0505-3350-4433-b156-8f0018698671" class="bulleted-list"><li>And it needs types for the arguments to Array functions that do things like adding items to it.</li></ul><ul id="77750b54-9a90-4bd4-be14-a7a1f4cf80eb" class="bulleted-list"><li>Enter … GENERICS.</li></ul><pre id="a5551bd6-fd03-4ad8-900f-82acab26691e" class="code"><code>struct Array&lt;Element&gt; {
+	...
+	func append(_ element: Element) { ... }
+}</code></pre><ul id="c8b784fd-97c9-4667-a0c5-d502e360f11d" class="bulleted-list"><li>The type of the argument to <code>append</code> is <code>Element</code> - a &quot;don&#x27;t care&quot; type</li></ul><ul id="0b010cba-7be6-433c-955d-40da49e76434" class="bulleted-list"><li>Array&#x27;s implementation of <code>append</code> knows nothing about the argument and it does not care.</li></ul><ul id="e2dfe7e3-9c40-4375-960f-981ec0c31861" class="bulleted-list"><li><code>Element</code> is not any known struct or class or protocol, it&#x27;s just a placeholder for a type.</li></ul><ul id="88ec496d-c90c-4172-8996-7ec0e4f2cf7c" class="bulleted-list"><li>The code for using an Array looks something like this...</li></ul><pre id="23d6ecd5-a88d-4fce-ac73-21999d2b652a" class="code"><code>var a = Array&lt;Int&gt;()
+a.append(5)
+a.append(1024)</code></pre><p id="ed945d63-984b-4645-8771-c0c964382494" class="">When someone uses Array, that is <strong>WHEN</strong> the Element gets determined (by <code>Array&lt;Int&gt;</code>)</p></details></li></ul><ul id="14fdfaed-762e-4daa-8c88-877b0471d5db" class="toggle"><li><details open=""><summary>Functions as Types</summary><hr id="aab6750a-fc8e-4794-929b-58eb4008e4d1"/><p id="2ad6ad50-ef51-41da-b677-190c5f66ca02" class="">W<em>e are mostly doing &quot;</em><span style="border-bottom:0.05em solid"><strong><em>functional programming</em></strong></span><em>&quot; in SwiftUI</em></p><p id="6438a9ed-b5d0-41f3-8a15-0e19d82af896" class="">Functions are types too</p><p id="c2bf7c56-9d89-4a9f-af49-358e86606f42" class=""><mark class="highlight-yellow_background"><em>Example:</em></mark></p><pre id="4b51f8c9-8b63-4fbb-a2d5-12207d0b4baf" class="code"><code>(Int, Int) -&gt; Bool
+(Double) -&gt; Void
+() -&gt; Array&lt;String&gt;
+() -&gt; Void</code></pre><pre id="382e541b-a7c0-4020-a72c-f16b2353b248" class="code"><code>// type of foo: &quot;function that takes a Double returns nothing&quot;
+var foo: (Double) -&gt; Void
+
+// type of what: function takes nothing returns Bool
+func doSomething(what: () -&gt; Bool)</code></pre><h3 id="92d686d4-71f3-4e12-baac-bf180b8a74ad" class="">Closures:</h3><ul id="27290bce-01f5-4738-adb4-e0964666cfda" class="bulleted-list"><li>inlined function</li></ul></details></li></ul><p id="4f06ba20-4d4b-43ac-8716-670d1505b02d" class="">
+</p><ul id="0ba92c9c-9dd2-4702-9ee1-0f6e4984a1f5" class="toggle"><li><details open=""><summary>MVVM Demo</summary><h1 id="159e2198-2d46-433d-8b84-7652065523f8" class="">1. Model</h1><pre id="aeb6566d-6594-4a49-9e6e-bd301da2e4f9" class="code"><code>import Foundation
+
+struct MemoryGameModel&lt;CardContent&gt; {
+    var cards: Array&lt;Card&gt;
+
+    func choose(card: Card) {
+        print(&quot;card chosen: \(card)&quot;)
+    }
+    
+    struct Card {
+        var isFaceUp: Bool
+        var isMatched: Bool
+        var content: CardContent    // a made-up don&#x27;t-care type
+    }
+}</code></pre><p id="4c1ace8e-5425-4740-a1c3-b2f9e86a7ef0" class="">We&#x27;ll call: <code>MemoryGame&lt;String&gt;</code> to tell what type <code>CardContent</code> is.</p><p id="99191a17-3006-4337-be2b-88580b8d65f0" class="">
+</p><pre id="c074f89d-0578-4e52-9c10-a43029d25845" class="code"><code>init(numberOfPairsOfCards: Int, cardContentGenerator: (Int) -&gt; CardContent) {
+	cards = Array&lt;Cards&gt;()
+	for pairIndex in 0..&lt;numberOfPairsOfCards {
+		let content = cardContentGenerator(pairIndex)
+		cards.append(Card(content: content, id: pairIndex*2))
+		cards.append(Card(content: content, id: pairIndex*2 + 1))
+	}
+}</code></pre><h1 id="3974dd21-b7c7-4f92-bff9-108e3913fb3a" class="">2. ViewModel</h1><p id="1f917325-439c-4d1d-ac35-d587733e39c2" class="">We use <code>class</code> to implement ViewModel. It is stored in the <strong>heap</strong>, so can be accessed using pointers by all views.</p><pre id="1539f5d9-4199-4a62-9ecd-02c2fd8e7a35" class="code"><code>import SwiftUI
+
+class EmojiMemoryGame {
+    
+     private var model: MemoryGame&lt;String&gt; = createMemoryGame()
+    
+    static func createMemoryGame() -&gt; MemoryGame&lt;String&gt; {
+        let emojis: Array&lt;String&gt; = [&quot;🥰&quot;, &quot;😡&quot;, &quot;😅&quot;]
+        return MemoryGame&lt;String&gt;(numberOfPairsOfCards: emojis.count) { pairIndex in
+            return emojis[pairIndex]
+        }
+    }
+    
+    // Access to the Model
+    var cards: Array&lt;MemoryGame&lt;String&gt;.Card&gt; {
+        model.cards
+    }
+    
+    // Intent
+    func choose(card: MemoryGame&lt;String&gt;.Card) {
+        model.choose(card: card);
+    }
+}</code></pre><p id="1bfd67ab-fd44-4bdc-a1fa-c6f8fd38374e" class="">
+</p><p id="c5242525-58af-42e6-87be-f1ca116b416c" class="">
+</p></details></li></ul><p id="f816d86f-056c-4597-a2c7-e73185565eeb" class="">
+</p><pre id="3d4c2c22-1c34-4e83-8467-bbbdece4aa6c" class="code"><code>private(set) is a &quot;glass door&quot; - can see but cannot modify
+    private(set) var model: MemoryGame&lt;String&gt;
+    
+private var model: MemoryGame&lt;String&gt; = MemoryGame&lt;String&gt; 
+		(numberOfPairsOfCards: 2, cardContentFactory: {(pairIndex: Int) -&gt; String in
+    return &quot;😅&quot;
+})
+private var model: MemoryGame&lt;String&gt; = MemoryGame&lt;String&gt; (numberOfPairsOfCards: 2, cardContentFactory: { _ in &quot;😅&quot; })</code></pre><p id="aa1dde5d-a282-4c7d-8f16-79d89e422f16" class="">
+</p><ul id="07d61b89-af58-42de-a49c-2e0985828021" class="toggle"><li><details open=""><summary>什么是MVVM框架？ - 知乎</summary><hr id="dd3bb488-60fe-4425-bbd7-5d9cc271a7bd"/><figure id="9c03503b-8e21-4fb4-ad17-2c4ff25fd1f5"><a href="https://zhuanlan.zhihu.com/p/59467370" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">什么是MVVM框架？</div><div class="bookmark-description">原文链接： MVVM是什么 ？ 前言 ...</div></div><div class="bookmark-href"><img src="https://static.zhihu.com/heifetz/favicon.ico" class="icon bookmark-icon"/>https://zhuanlan.zhihu.com/p/59467370</div></div><img src="https://pic1.zhimg.com/v2-ec0fa2af960e991b7c50a8f3e4d62ccc_720w.jpg?source=172ae18b" class="bookmark-image"/></a></figure><h2 id="cf8881e4-8eb5-4030-9b8b-8c058a43d237" class=""><strong>前言</strong></h2><p id="1fa273ff-1268-4192-95a8-e4fdabd30a4f" class="">相信你看到这篇文章的时候，已经在网上查阅过不少资料，对MVVM有个大概了解，但概念并不清晰。此文不长，但希望能为你理解MVVM尽绵薄之力。</p><p id="44675478-82e2-45fc-be26-5631d748363e" class="">当我们将要去接触或者使用一门新技术时，最重要的是：怎么用，为什么要这么用？所谓知其然必知其所以然。曾经和一个有着多年开发经验的老手讨论时，他说MVVM是对MVC的一种颠覆。我知道这可能只是一个人用词的准确度问题，虽然我并没有打断他，很认真的听他说完，感觉得出来他会使用，只是可能没有尝试过自己去设计这样一个架构，因为我并不赞同“颠覆”一词。So，what is MVVM？</p><h2 id="8ccadebf-0672-4dfa-9694-a560c77b7bfc" class=""><strong>什么是MVVM</strong>？</h2><p id="53e6c6f1-0980-4b16-acba-3f82f13c6272" class=""><strong>MVVM是MVC的增强版，实质上和MVC没有本质区别，只是代码的位置变动而已</strong>，这是我对MVVM的定义，如果你不知道什么是MVC，请往下看。</p><h2 id="dde970ff-1a7f-48f3-904b-9a04248060c0" class=""><strong>MVC简要</strong></h2><p id="77845f6f-eb8c-43f2-a335-1225aa719562" class="">如果你做过iOS开发，相信你对这几个东西一定很熟：<strong>Model、View、Controller</strong>，分别表示<strong>数据、视图、控制器</strong>。当然，其他方向的开发人员应该不也会太陌生，其实这只是一种设计思想，具体用什么语言和做什么开发并不重要。所谓MVC便是这几个单词的简写，那么它们之间是怎么工作的呢？先看下图。</p><p id="93a648e6-0450-490f-b12c-1bc948f07171" class=""><a href="https://link.zhihu.com/?target=https%3A//link.jianshu.com/%3Ft%3Dhttps%3A//developer.apple.com/library/content/documentation/General/Conceptual/DevPedia-CocoaCore/MVC.html">Model-View-Controller - Apple Developer</a></p><figure id="94258732-0fa1-452b-8c89-89dca65aa44c" class="image"><a href="Lec2%20MVVM%20and%20the%20Swift%20Type%20System%204b7f8476caaa4ad8804cc4b887e128fd/Screen_Shot_2021-04-30_at_3.23.25_AM.png"><img style="width:1438px" src="Lec2%20MVVM%20and%20the%20Swift%20Type%20System%204b7f8476caaa4ad8804cc4b887e128fd/Screen_Shot_2021-04-30_at_3.23.25_AM.png"/></a></figure><p id="8a4b56bd-deb7-40fe-8aa4-efff51fdc109" class="">这是苹果开发者文档中摘过来的图片，表明了三者之间的关系，简单描述了三者作用
+Model：数据模型，用来存储数据
+View：视图界面，用来展示UI界面和响应用户交互
+Controller：控制器(大管家角色)，监听模型数据的改变和控制视图行为、处理用户交互</p><p id="e155436a-c3a0-4ea8-bae6-4e1541fa4262" class="">他们工作和关系看起来是如此清晰，是一种非常好的设计思想，是的，首先声明MVC是一个非常好的架构思想，你必须要掌握。</p><h2 id="48ff760c-9328-429f-a6d2-88a6d61caffe" class=""><strong>MVVM简要</strong></h2><p id="ca1d3fa5-1a69-4fbf-a535-3874b8c6c762" class="">既然MVC这么好，那为什么还要使用MVVM？我们先来看一下MVVM是什么。</p><figure id="e4e6c6c5-d1b9-4d3b-b47d-9f11d9977b0e" class="image"><a href="Lec2%20MVVM%20and%20the%20Swift%20Type%20System%204b7f8476caaa4ad8804cc4b887e128fd/Screen_Shot_2021-04-30_at_3.30.07_AM.png"><img style="width:1326px" src="Lec2%20MVVM%20and%20the%20Swift%20Type%20System%204b7f8476caaa4ad8804cc4b887e128fd/Screen_Shot_2021-04-30_at_3.30.07_AM.png"/></a><figcaption>Model-ViewModel-View-Controller</figcaption></figure><p id="47e97f61-fb84-4b3c-9ca4-042183cd5224" class="">上图描述了MVVM一个基本结构，看到了什么，是不是<strong>发现比MVC架构中多了一个ViewModel</strong>，没错，就是这个ViewModel，他是MVVM相对于MVC改进的核心思想。在开发过程中，由于需求的变更或添加，项目的复杂度越来越高，代码量越来越大，此时我们会发现MVC维护起来有些吃力，首先被人吐槽的最多的就是MVC的简写变成了Massive-View-Controller（意为沉重的Controller）</p><p id="686ee62d-dd26-4cde-ac98-a0e62d6dc6af" class="">由于Controller主要用来处理各种逻辑和数据转化，复杂业务逻辑界面的Controller非常庞大，维护困难，所以有人想到<strong>把Controller的数据和逻辑处理部分从中抽离出来，用一个专门的对象去管理，这个对象就是ViewModel，是Model和Controller之间的一座桥梁</strong>。当人们去尝试这种方式时，发现Controller中的代码变得非常少，变得易于测试和维护，只需要<strong>Controller和ViewModel做数据绑定</strong>即可，这也就催生了MVVM的热潮。</p><h2 id="b29bee45-4911-4ff1-a263-fdb435db4036" class=""><strong>MVVM值得用么？</strong></h2><p id="b2d7bf60-2f16-46eb-ba1e-c85bb26a26ed" class=""><strong>个人非常推荐使用</strong>，并且可以直接在你现有的MVC基础上进行扩展，我们首先来看下优缺点：</p><h3 id="6a7763d2-76b3-4bf5-bcbd-aa895f578fa7" class=""><mark class="highlight-yellow_background"> 👍 优点：</mark></h3><ol id="5af5403f-d95a-4b04-9a31-275f0189e24c" class="numbered-list" start="1"><li>Controller清晰简洁： ViewModel分离了大部分Controller代码，更加清晰和容易维护。</li></ol><ol id="bef6e2d1-1160-47be-bdf2-634ae445d60e" class="numbered-list" start="2"><li>方便测试：开发中大部分Bug来至于逻辑处理，由于ViewModel分离了许多逻辑，可以对ViewModel构造单元测试。</li></ol><ol id="d21eead2-ff59-4ff7-99e1-bd0a0be5b3b7" class="numbered-list" start="3"><li>开发解耦(举两个例子)：<ul id="8985f227-4f04-46f0-bc70-e831af23022a" class="bulleted-list"><li>一人负责逻辑实现、另一人负责UI实现；</li></ul><ul id="84ed5327-cb2c-4ed5-88e0-6887dac40efa" class="bulleted-list"><li>Swift 开发时，会发经常发不是等后端做好了接口我们再去开发，不过在没有接口的情况下通常我们可以把Controller和View完成。</li></ul></li></ol><h3 id="29f21aa6-8088-4e57-b6a0-460c8483064a" class=""><mark class="highlight-yellow_background"> 🤔 缺点：</mark></h3><p id="05abc4fc-56e8-42fd-9bc8-03d387c5cec5" class="">1.看起来代码会比MVC多点
+2.需要对每个Controller实现绑定，如果处理不好，反而会有一种“画虎不成反类犬”的感觉</p><h2 id="51080f4c-19b1-4e34-9c45-8bfd99525cf9" class=""><strong>总结</strong></h2><p id="a7ff8603-4a35-4def-a617-8daabc33fe52" class="">在我实际使用过程中，MVVM写出的代码量并不比MVC的少，有时反而还会多点，毕竟多了一个数据绑定过程，但逻辑会清晰很多，对于多人开发的团队，还是有不少优势的，缺点和优点相比不值一提，总之<strong>推荐使用。</strong></p><p id="36759031-9413-4ac2-b84b-57c53596d119" class="">当然，说了这么多全是理论的东西，没有任何代码和演示，你可能都困了，至于代码我就不列举了，GitHub上有很多案例，这里推荐两个<a href="https://link.zhihu.com/?target=https%3A//link.jianshu.com/%3Ft%3Dhttps%3A//github.com/AshFurrow/C-41">C-41</a>和<a href="https://link.zhihu.com/?target=https%3A//link.jianshu.com/%3Ft%3Dhttps%3A//github.com/lizelu/MVVM">MVVMTest</a></p></details></li></ul></div></article></body></html>

@@ -1,0 +1,663 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lec7: Multi-threading, &quot;EmojiArt&quot;</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="770d4087-ff22-42d9-94c6-5718bf9224d1" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">7️⃣</span></div><h1 class="page-title">Lec7: Multi-threading, &quot;EmojiArt&quot;</h1></header><div class="page-body"><ul id="9aba4f82-1412-47ed-9bfe-fd92396f04d8" class="toggle"><li><details open=""><summary><strong>Color</strong> vs. <strong>UIColor</strong></summary><div id="7321eab2-1ee1-4476-86a7-39ab07af161b" class="column-list"><div id="a45b6a7b-58aa-4fa4-a1d2-c9a783ee0780" style="width:50%" class="column"><h3 id="353ec939-7939-409b-9b13-bd7f7789ff5c" class="">Color</h3><ul id="cfdb1263-1f7d-4324-a599-41f40142aef2" class="bulleted-list"><li>Is a color-specifier, e.g., <code>.foregroundColor(Color.green)</code></li></ul><ul id="be4394da-4ddf-4a3a-9de7-95fcea3531b4" class="bulleted-list"><li>Can also act like a ShapeStyle, e.g., <code>.fill(Color.blue)</code></li></ul><ul id="018064e6-9007-45c0-ae52-bb7deb757ec8" class="bulleted-list"><li>Can also act like a View, e.g., <code>Color.white</code> can appear wherever a View can appear.</li></ul><ul id="ad52b8a3-9075-41c8-8a85-7b52193654b3" class="bulleted-list"><li>Due to this multifaceted role, its API is limited mostly to creation/comparison.</li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="abbef96b-9172-455c-acdc-63f0a6cfaafd"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">The meaning of the symbol varies by context in SwiftUI</div></figure><p id="82649a1b-cd2e-4132-bffd-dc03205f78de" class="">
+</p></div><div id="2bb98ec0-e11a-4b44-824a-c3fd5393e37f" style="width:50%" class="column"><h3 id="cbf718c8-3a9a-454d-a4c6-233afdbbe382" class="">UIColor</h3><ul id="6f6f41d1-ebdf-4427-9e87-2271e38cbda3" class="bulleted-list"><li>Is used to <span style="border-bottom:0.05em solid"><strong>manipulate</strong></span> colors.</li></ul><ul id="914710ce-c3ad-465b-a330-7f6abff46d26" class="bulleted-list"><li>Also has many <span style="border-bottom:0.05em solid"><strong>more built-in colors</strong></span> than Color, including “system-related” colors.</li></ul><ul id="ccf63a32-a17f-4a8e-bee5-9f1ab3cc55a8" class="bulleted-list"><li>Can be interrogated and can convert between color spaces. </li></ul><ul id="ec5c35d6-2057-45a0-b39f-b3002c217a34" class="bulleted-list"><li><em>(For example, you can get the RGBA values from a UIColor.)</em></li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="01f622bc-224e-4134-b612-34013b3797b3"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Once you have desired UIColor, employ Color(uiColor:) to use it in one of the roles above.</div></figure><p id="3a27a8ac-b8cb-4ddd-b400-4f07dfa0dee3" class="">
+</p></div></div></details></li></ul><ul id="779866ec-9367-41ff-b0a8-103ad98889ce" class="toggle"><li><details open=""><summary><strong>Image</strong> vs. <strong>UIImage</strong></summary><div id="5adce3d5-4952-415f-b2c2-2e8f8e79c59c" class="column-list"><div id="7cddcf22-5fdc-4dc4-a654-857f83a432ec" style="width:50%" class="column"><h3 id="fc9ff6b3-f4c2-45c7-a6c1-abccee021a9b" class="">Image</h3><ul id="b8a15186-12b0-4590-ae81-5a9758ad558b" class="bulleted-list"><li>Primarily serves as a <code>View</code></li></ul><ul id="50fcb2bf-acfb-49c1-a7ed-749108765481" class="bulleted-list"><li>Is <span style="border-bottom:0.05em solid"><strong>NOT</strong></span><span style="border-bottom:0.05em solid"> a type for vars that hold an image </span>(i.e. a jpeg or gif or some such). That’s UIImage.</li></ul><ul id="095ccdce-9b2c-49d4-a190-f3ac545e3316" class="bulleted-list"><li>Access images in your <em><strong>Assets.xcassets </strong></em>by name using Image(_ name: String).</li></ul><ul id="078f82d5-81eb-49e9-ac9a-83c903d71cfd" class="bulleted-list"><li>Many system images available via <code>Image(systemName:)</code>. (SF Symbols)</li></ul><ul id="d14c9d19-fb9e-406c-8362-968db7306f65" class="bulleted-list"><li>You can control the size of system images with <code>.imageScale()</code> View 
+modifier. System images are also very useful as masks (for gradients, for example).</li></ul></div><div id="b1f92fdc-b2d7-4209-b55f-5db14d2310ba" style="width:50%" class="column"><h3 id="5e581bd0-f101-41d9-a89f-76b338a39323" class="">UIImage</h3><ul id="e940fe78-149d-430a-84f9-de6a32e68714" class="bulleted-list"><li>Is the type for actually creating or manipulating images and storing in vars.</li></ul><ul id="4da7480c-4a26-4d22-a8a6-2f66944e3ae1" class="bulleted-list"><li>Very powerful representation of an image.</li></ul><ul id="0acb5b4a-a678-4b12-9770-b122bf29693a" class="bulleted-list"><li>Multiple file formats, transformation primitives, animated images, etc. </li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="032d577f-5d4c-4d73-b7c0-8e213a3711c4"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Once you have the UIImage you want, use Image(uiImage:) to display it.</div></figure><p id="ae9640de-8805-420f-9e47-982f4da92b0b" class="">
+</p></div></div><p id="f4ffb8c4-135d-4eac-b269-99f5a4329362" class="">
+</p></details></li></ul><ul id="722ca813-10dd-4af1-ade2-3afb00e41448" class="toggle"><li><details open=""><summary><strong>Explanation of Multi-threading</strong></summary><hr id="c9f59a4a-3fb1-4a7b-b0ff-e8e10f5a48b1"/><p id="32c99383-675a-4a15-924e-33261abcce75" class=""><em><strong>Don&#x27;t Block my UI!</strong></em> Never let your UI to be unresponsive to the user. </p><ul id="22cf771d-0a4c-417c-9a7b-b5b68e1fe6fb" class="toggle"><li><details open=""><summary><span style="border-bottom:0.05em solid"><strong>Elaboration on Threads ...</strong></span></summary><p id="0f27ebf1-c1f3-4179-ba3a-beb0ed157073" class="">To keep our UI responsive when these long-lived tasks are going on, we execute them <span style="border-bottom:0.05em solid"><strong>on a different “thread of execution”</strong></span> than the UI is executing on.</p><p id="1cbdb2bd-7642-4a34-bd0a-6e0462e0acf4" class="">Most modern operating systems (including iOS) let you specify a “thread of execution” to use. These threads appear to be all executing their code simultaneously.</p><p id="b14ad558-8533-4344-8664-fef2fa3ddde3" class="">The challenge is to make multithreaded code <span style="border-bottom:0.05em solid">authorable</span>, <span style="border-bottom:0.05em solid">readable</span> and <span style="border-bottom:0.05em solid">understandable</span>.</p></details></li></ul><h2 id="86da30b8-840b-41a1-a93d-2dc011889fc2" class="">Queues</h2><figure class="block-color-blue_background callout" style="white-space:pre-wrap;display:flex" id="38aaec77-76b4-471f-8523-7916874daa14"><div style="font-size:1.5em"><span class="icon">📘</span></div><div style="width:100%"><strong><mark class="highlight-blue">[Definition] </mark></strong>A bunch of blocks of code, lined up, waiting for a thread to execute them.</div></figure><p id="f0b4db83-c5dd-464b-a4a8-c76d69841ea6" class="">Swift manages this complexity this using queues.</p><p id="56cb3c07-6a82-4e8f-86eb-d9b7304e6c03" class="">In Swift, you are concerned only with queues. The system takes care of providing / allocating threads to execute code off these queues.</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="05b46b8c-0f46-4e1b-a4d9-33e1145649d3"><div style="font-size:1.5em"><span class="icon">🛠</span></div><div style="width:100%"><strong>Queues &amp; Closures
+</strong>We specify the blocks of code waiting in a queue using closures (aka functions as arguments).
+The core multithreading API is very simple: plop a closure onto a queue.</div></figure><h2 id="850219da-f6a2-40ed-b1b8-521858749446" class="">Main Queue</h2><ul id="413d2e29-1a9c-43a6-a8b4-b278885e4e13" class="bulleted-list"><li>The most important queue in iOS</li></ul><ul id="7a12014b-6900-4cd3-aeb1-711d1a1a660d" class="bulleted-list"><li>Any time we want to do something in the UI, we must use this queue.</li></ul><ul id="aa40b510-8fe5-4e57-9d4a-653330e3ef52" class="bulleted-list"><li>The system uses <strong><span style="border-bottom:0.05em solid">a single thread</span></strong> to process all the blocks of code from the main queue. </li></ul><ul id="75bc418a-9ccf-4bd2-a138-5677c8487b47" class="bulleted-list"><li>So it can also be used to synchronize. <em>(e.g. to protect data structures by only mutating them on the main queue)</em></li></ul><h2 id="8c5bff7e-59bc-4a4a-82f3-ef0421412a7d" class="">Background Queues</h2><ul id="83a4ee60-962a-4fb0-a0ac-d29160b5808a" class="bulleted-list"><li>Running &quot;in paraller&quot; (aka. simultaneously) with the main UI queue</li></ul><ul id="dd280802-50f8-49bb-be4c-1d6452645980" class="bulleted-list"><li>You can influence the priority of these background queues by specifying a &quot;quality of service&quot; for that queue</li></ul><ul id="1b77a22d-b1ae-4cc6-9619-ccd977340e05" class="bulleted-list"><li>The priority always &lt; Main Queue</li></ul><h2 id="66fda8c2-166c-4bfc-b613-431e1d1c8351" class="">GCD</h2><p id="14abf2f7-04a9-425f-864c-ea74669515e7" class="">The base API for doing all this queue stuff is called GCD (Grand Central Dispatch).</p><p id="c9c29b8b-4a9f-4cd3-8142-f5c585610de6" class="">It has a number of different functions in it, but there are two fundamental tasks ...</p><ol id="97136d19-e33c-47e7-b65d-704785b29a55" class="numbered-list" start="1"><li>getting access to a queue</li></ol><ol id="e06f9277-7f91-4e57-9a12-6b91378c1b64" class="numbered-list" start="2"><li>plopping a block of code on a queue</li></ol><p id="07ac9bcb-9aab-4d3f-b364-9c70d789e65e" class="">
+</p></details></li></ul><ul id="d748b87b-5259-48fa-ad64-da3dd25c520b" class="toggle"><li><details open=""><summary><strong>Implementation of Multi-threading</strong></summary><hr id="159b24ff-f5a4-4231-9494-8f1ac421ed9d"/><h3 id="9f773cba-1e1e-4970-a105-4bc1136608ae" class="">Creating a Queue</h3><pre id="6582858f-3a0e-4ba8-9990-55a24895e27c" class="code"><code>DispatchQueue.main // the queue where all UI code must be posted
+DispatchQueue.global(qos: QoS) // a non-UI queue with a certain quality of service </code></pre><p id="f6c64fdb-989f-4a32-9a38-025c37ba3b75" class="">... where <strong>qos (quality of service)</strong> is one of the following:</p><pre id="0b2ae893-4dba-41f0-a1aa-7756e0b6621e" class="code"><code>.userInteractive  // do this fast, the UI depends on it!
+.userInitiated    // the user just asked to do this, so do it now
+.utility          // this needs to happen, but the user didn’t just ask for it
+.background       // maintenance tasks (cleanups, etc.)</code></pre><h3 id="21dec783-df06-4698-871c-757b113a2baa" class="">Plopping a Closure onto a Queue</h3><pre id="1bf230ea-cf0d-40dd-a0da-8f95a212374b" class="code"><code>let queue = DispatchQueue.main
+// or 
+let queue = DispatchQueue.global(qos:)
+
+queue.async { /* code to execute on queue */ }
+queue.sync { /* code to execute on queue */ }</code></pre><ul id="30708a25-5f5f-4fbc-a1b4-15aa479bcec8" class="bulleted-list"><li><code>.sync</code> blocks waiting for that closure to be picked off by its queue and completed. Thus, you would <strong>NEVER</strong> call it in UI code. You might (but still rarely) call it on a background queue. (e.g. to wait for some UI to finish)</li></ul><ul id="b84570a4-4c0f-4188-ab0b-7d7f1d0f3ed6" class="bulleted-list"><li><code>.async</code> will execute that closure &quot;sometime later&quot;. (Whenever that closure gets to the front of the queue you plopped it onto.)</li></ul><h3 id="3da157b0-d52a-4ee3-8fc6-a1b042a3ecb0" class="">Nesting</h3><pre id="8f0a0071-db2a-4aef-bdb8-c77acfbc2ba3" class="code"><code>DispatchQueue(global: .userInitiated).async {
+
+	/*
+		Do something that might take a long time
+		This will NOT block the UI because it is happening [off the main queue]
+		
+		Once this long-time thing is done, it might require a change to the UI
+		But we can’t do UI here because this code is executing off the main queue
+		So, we just plop a closure with the UI code we want [onto the main queue]
+	*/		
+
+	DispatchQueue.main.async {
+		// UI code can go here! we’re on the main queue!
+	}
+}</code></pre><p id="228e41a3-9634-4516-b4c4-4999d51b0f0d" class="">
+</p><p id="99ffaf52-f754-44d8-95be-9d73af49e19c" class="">We’re going to fetch some data from the internet directly instead of using <code>URLSession</code>. But that’s just so you can see this &quot;nesting&quot; of GCD going on.</p><p id="b20b9c19-8201-4d41-9bc2-2ce080904d33" class="">In the real world, you’d use <code>URLSession</code> to fetch data from the internet.</p><p id="8cb74983-d5e6-4968-b5c7-5baa78a707a7" class="">
+</p><p id="7a4ef49c-b172-4b4a-b7b7-d015f6b6ebd3" class="">
+</p></details></li></ul><p id="998c3134-34f4-4a59-a54f-59d9977f9614" class="">
+</p><h1 id="aada3ea2-66df-4634-b3cf-4818947c8fdd" class="">EmojiArt Demo</h1><p id="739d4a28-91ec-4cf0-8ec5-f2d85d2fcdb0" class="">
+</p></div></article></body></html>

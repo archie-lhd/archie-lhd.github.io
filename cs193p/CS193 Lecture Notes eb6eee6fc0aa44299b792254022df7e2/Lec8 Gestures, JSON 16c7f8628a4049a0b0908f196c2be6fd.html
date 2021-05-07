@@ -1,0 +1,670 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lec8: Gestures, JSON</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="16c7f862-8a40-49a0-b090-8f196c2be6fd" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">8️⃣</span></div><h1 class="page-title">Lec8: Gestures, JSON</h1></header><div class="page-body"><ul id="a020e594-8d21-43c1-be2b-7b4f4d1e2c9f" class="toggle"><li><details open=""><summary>UserDefaults</summary><hr id="44fbdab7-1939-4761-b99c-dc744d329212"/><h2 id="d6bd10f5-c103-43bb-b777-84f0f4015253" class="">Persistence</h2><p id="59d61493-db1e-4216-a8eb-be93d15adb7d" class=""><strong>To Storing Data Permanently ...</strong></p><ul id="c2d95384-3f58-43ea-967f-b2bf31834ecf" class="bulleted-list"><li>In the filesystem (<code>FileManager</code>)</li></ul><ul id="f7aa1be8-a187-4afd-82de-585a8483e9e9" class="bulleted-list"><li>In a SQL database (<code>CoreData</code> for OOP access / direct SQL calls)</li></ul><ul id="d5c5a020-eccc-4360-a15c-23ec0d8cf632" class="bulleted-list"><li>iCloude (<code>CloudKit</code>)</li></ul><ul id="d10daaf8-349e-4b43-bf08-10deb18b8f38" class="bulleted-list"><li><code>UserDefaults</code></li></ul><h2 id="49ebc1ce-b275-4dd9-87df-8a650cc61a5e" class="">UserDefaults</h2><p id="cfb13257-fd41-4828-a4ce-c826df3cdee8" class="">&quot;Persistent dictionary&quot;</p><p id="f599d516-600c-4872-90b0-4d904436df94" class="">Should only be used for &quot;User preferences&quot; or other lightweight bits of information</p><h3 id="065aa0f6-dcf9-45e0-b192-9f49ec5a48e0" class="">Property Lists</h3><p id="8aeaa6d1-c2b8-4554-8467-772881ada118" class="">UserDefaults can only store what is called a <code><strong>Property List</strong></code>.</p><p id="5a0f242f-b535-4c58-ad99-0bc84e521dfc" class="">This is <strong>NOT</strong> a <code>protocol</code> or a <code>struct</code> or anything tangible or Swift-like</p><p id="72ee69be-cc1c-4246-b9fc-3f1bd521cc16" class="">Property List is simply a &quot;concept&quot;:</p><ul id="9c11ce5d-c428-4623-bb00-ba329a7d6bb6" class="bulleted-list"><li>Any combination of <code>String</code>, <code>Int</code>, <code>Bool</code>, <code>floating point</code>, <code>Data</code>, <code>Array</code>, or <code>Dictionary</code></li></ul><ul id="66d86d6c-20c3-41ac-8839-8816b4f8b1e8" class="bulleted-list"><li>If you want to store anything else, convert it into a <strong><code>Property List</code></strong></li></ul><ul id="36de19f8-d6bb-4e22-8579-c629578bbe38" class="bulleted-list"><li>Use <code>Codable</code> protocol in Swift: it converts structs into Data objects (where Data is a Property List)</li></ul><h3 id="a7228288-2a77-4f8c-8748-392a514c1d8c" class="">The &quot;Any&quot; Type</h3><p id="8ebaa833-0cd8-45d0-be94-9d9bf4f9c226" class="">The API for UserDefaults contain a lot of uses of the type <code>Any</code>, which is strange because it is pre-Swift. </p><p id="883f3605-aaca-4a66-9012-2387897ac970" class="">Since Swift is a <span style="border-bottom:0.05em solid"><strong>strongly-typed</strong></span> language, it does not like <code>Any</code> yet supports it for backwards compatibility.</p><h3 id="69110af9-c437-4505-82aa-acdd59c684d7" class="">Using UserDefaults</h3><p id="e9c1ad59-4506-4593-ba51-c8d4f531cb1e" class=""><strong>To store data ...</strong></p><pre id="60664c28-58b2-4e6e-bfb4-ba595e5f399c" class="code"><code>let defaults = UserDefaults.standard
+
+// object must be a Property List
+defaults.set(object, forKey: &quot;SomeKey&quot;)
+defaults.setDouble(37.5, forKey: &quot;MyDouble&quot;)</code></pre><p id="4ae4ef7e-5730-4c3c-a91a-93f92490b089" class=""><strong>To retrieve data ...</strong></p><pre id="0a142233-4497-420d-b53f-a8a76a28be22" class="code"><code>let i: Int = defaults.integer(forKey: &quot;MyInteger&quot;)
+let b: Data = defaults.data(forKey: &quot;MyData&quot;)
+let u: URL = defaults.url(forKey: &quot;MyURL&quot;)
+let strings: [String] = defaults.stringArray(forKey: &quot;MyString&quot;)
+
+// Retrieving Arrays of anything but String is more complicated ...
+let a = array(forKey: “MyArray”)
+// ... will return an Array&lt;Any&gt;.</code></pre><p id="f5c6079d-acc8-41a9-8e99-73558d9ae714" class="">
+</p><p id="8e8f74d7-2476-40ef-ac83-805233e64fd0" class="">
+</p><p id="81ecd1de-7cb6-49f1-888a-7ce2399b191a" class="">
+</p></details></li></ul><ul id="3ae830e0-0396-4454-a412-2ac4f06eec29" class="toggle"><li><details open=""><summary>Gestures</summary><hr id="901da8dc-19db-401c-8fad-224396f015d6"/><pre id="d4513ae0-19c1-4480-ac2d-e7e1351afef5" class="code"><code>// theGesture must implement the Gesture protocol
+myView.gesture(theGesture)</code></pre><h2 id="247d5169-8b20-492f-b8c7-73387b258b80" class="">Creating a Gesture</h2><pre id="f5507219-0596-42c1-b382-b121925b8160" class="code"><code>var theGesture: some Gesture {
+	return TapGesture(count: 2) // &quot;double tap&quot;
+}</code></pre><h2 id="4b2a1ea2-2777-4dd5-b2ee-ce37ae1a9704" class="">Discrete Gestures</h2><pre id="6b05ce30-d18c-4b88-bb79-35812a9d51ed" class="code"><code>var theGesture: some Gesture {
+      return TapGesture(count: 2)
+.onEnded { /* do something */ }
+}
+
+// Built-in Discrete Gestures ...
+myView.onTapGesture(count: Int) { /* do something */ } 
+myView.onLongPressGesture(...) { /* do something */ }</code></pre><h2 id="32adc40e-8d1b-42f7-8dad-c73136a37bd3" class="">Non-Discrete Gestrues</h2><p id="a3bf481c-4202-4f81-a56f-ef39b98cc0fb" class="">You also handle the gesture while it is in the process of happening (fingers are moving).</p><p id="7b83b336-8066-4003-b202-a2d59fc6d771" class=""><strong>Examples:</strong> <code>DragGesture</code>, <code>MagnificationGesture</code>, <code>RotationGesture</code>.</p><p id="43995967-839d-4696-8979-20c4c6c5e753" class=""><code>LongPressGesture</code> can also be treated as non-discrete (i.e. fingers down and fingers up).</p><h3 id="82c66e7d-1cec-4543-88ca-2642a422b7f6" class="">Handling Non-Discrete Gestures</h3><pre id="7b18cd30-da83-4fd5-835d-65ee2f0fa55c" class="code"><code>var theGesture: some Gesture {
+	DragGesture(...)
+		.onEnded { value in /* do something */ }
+}</code></pre><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="57cbb1cb-b2af-4c83-9257-ef983ed298d5"><div style="font-size:1.5em"><span class="icon">🛠</span></div><div style="width:100%"><strong>Note:</strong> <code>.onEnded</code> passes you a value, which tells you the state of the DragGesture when it ended.</div></figure><h3 id="4976eedd-b5fc-4601-9d11-497fdc69ebe7" class=""><strong>What that value is varies from gesture to gesture ...</strong></h3><ul id="1dfec462-cade-4aff-817f-dd68b9adea72" class="bulleted-list"><li>For a <code>DragGesture</code>, it’s a struct with things like the start and end location of the fingers.</li></ul><ul id="30ef85d8-db7b-4ad3-921e-5c67db61fcad" class="bulleted-list"><li>For a <code>MagnificationGesture</code> it’s the scale of the magnification (how far the fingers spread out).</li></ul><ul id="04d83486-2f59-4ea0-a548-f112d2244d5f" class="bulleted-list"><li>For a <code>RotationGesture</code> it’s the Angle of the rotation (like the fingers were turning a dial).</li></ul><h3 id="175803a2-6198-4cef-a2a0-5da91885fb40" class=""><strong>The only place you can change your </strong><code><strong>@GestureState</strong></code><strong> ...</strong></h3><pre id="f380a0f1-b81f-4b1f-b5f5-7934b3257406" class="code"><code>@GestureState var myGestureState: MyGestureStateType = &lt;starting value&gt;
+var theGesture: some Gesture {
+	DragGesture(...)
+		.updating($myGestureState) { value, myGestureState, transaction in
+			myGestureState = /* usually something related to value */
+	}
+	.onEnded { value in /* do something */ }
+}</code></pre><ul id="5889466f-3618-4479-a6ce-290fe2b50371" class="bulleted-list"><li>This <code>.updating</code> will cause the closure you pass to it to be called <strong>when the fingers move.</strong></li></ul><ul id="3ae2fc96-10a0-41f1-b941-81a12f2a5620" class="bulleted-list"><li>The value argument to your closure is the same as with <code>.onEnded</code> (the state of the fingers).</li></ul><ul id="a7af56d9-dce5-40d3-ad57-dff4404c01e7" class="bulleted-list"><li>We’re going to ignore the transaction argument (it has to do with animation).</li></ul><h3 id="72f6ac03-f4ba-4ff7-b8fc-8d93197b1845" class=""><strong>Tracking the absolute (actual) finger positions ...</strong></h3><pre id="4209f46e-b252-4030-bc32-61bb4fe4dc40" class="code"><code>var theGesture: some Gesture {
+	DragGesture(...)
+		.onChanged { value in
+			/* do something with value (the state of the fingers) */
+		}
+		.onEnded { value in /* do something */ }
+}</code></pre><p id="69451744-9cb1-42ee-996e-b824d7eac5af" class="">
+</p></details></li></ul><ul id="ca3213cb-c734-4bd3-8c9f-fee504f1f331" class="toggle"><li><details open=""><summary>Demo</summary><p id="78a0ea1b-a103-46c5-8984-a405ca33c748" class="">
+</p></details></li></ul><p id="f33ebb5b-eb1b-4a87-80a8-61e92b714fff" class="">
+</p></div></article></body></html>

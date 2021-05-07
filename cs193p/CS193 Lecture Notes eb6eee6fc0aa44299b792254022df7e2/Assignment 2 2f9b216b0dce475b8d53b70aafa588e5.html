@@ -1,0 +1,687 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Assignment 2</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="2f9b216b-0dce-475b-8d53-b70aafa588e5" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">📔</span></div><h1 class="page-title">Assignment 2</h1></header><div class="page-body"><p id="4ccb0b1a-beaf-49bc-81f4-3c7bfd7f7cb7" class="">
+</p><p id="34ff7808-bb32-4e80-9a46-35c31df34888" class="">CS193P IOS APPLICATION DEVELOPMENT SPRING 2020</p><h1 id="f1d4876a-68f0-4897-89d6-57c03a6831d7" class=""><strong>Assignment II:
+More Memorize</strong></h1><h2 id="30b7a593-1269-483c-b414-a809be3108c9" class=""><strong>Objective</strong></h2><p id="f18e520b-5af5-4aef-ade4-8604807b514f" class="">The goal of this assignment is to continue to recreate the demonstrations given in the
+next two lectures (first four lectures in total) and then make some bigger enhancements.
+It is important that you understand what you are doing with each step of recreating the
+demo from lecture so that you are prepared to do those enhancements.</p><p id="383b6598-91ea-41aa-8d32-933f7bc0fa8e" class="">This continues to be about experiencing the creation of a project in Xcode and typing
+code in from scratch. <strong>Do not copy/paste any of the code from anywhere.
+</strong>Type it in and watch what Xcode does as you do so.</p><p id="64a61807-80ad-4e8b-8ceb-0e24d7cfddc5" class="">Be sure to review the Hints section below!</p><p id="d1b5fcb9-107c-40cf-bc16-b0f9125dd59e" class="">Also, check out the latest in the Evaluation section to make sure you understand what
+you are going to be evaluated on with this assignment.</p><h2 id="d600779f-9024-4704-a577-2b15b1f16061" class=""><strong>Due</strong></h2><p id="654e7173-774d-4b38-bf1d-8f7bf55a8a18" class="">This assignment is due before you watch Lecture 5.</p><h2 id="cea6cb32-1758-4b84-9594-01cf801e7280" class=""><strong>Materials</strong></h2><p id="5369cf3c-3150-419f-a826-17de43c3d58b" class="">Same materials as Assignment 1</p><h2 id="12f63702-6a87-48c7-a6b8-4f410f71cca6" class=""><strong>Required Tasks</strong></h2><ul id="9e5a6514-6bd9-4ae4-9fa2-ac0f62dae560" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">Get the Memorize game working as demonstrated in lectures 1 through 4. Type in all
+the code. Do not copy/paste from anywhere.</span></li></ul><ul id="680ac3a6-31f8-4ba3-9d07-946b8bcabaf2" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">Your game should still shuffle the cards.</span></li></ul><ul id="cffd66e9-6038-4dc5-8e1f-576676f57af2" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">Architect the concept of a “theme” into your game. A theme consists of a name for
+the theme, a set of emoji to use, a number of cards to show (which, for at least one,
+but not all themes, should be random), and an appropriate color to use to draw (e.g.
+orange would be appropriate for a Halloween theme).</span></li></ul><ul id="31f2d3ac-780b-420a-96fa-958c6c151338" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">Support at least 6 different themes in your game.</span></li></ul><ul id="5041845a-6b8b-471e-ac95-6486bdb6ef49" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">A new theme should be able to be added to your game with a single line of code.</span></li></ul><ul id="6ec49808-3c9f-40e1-af97-c8f22c08f9cb" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">Add a “New Game” button to your UI which begins a brand new game. This new
+game should have a randomly chosen theme. You can put this button anywhere you
+think looks best in your UI.</span></li></ul><ul id="da04e423-47c8-464d-8efe-846adf1581cc" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">Show the theme’s name somewhere in your UI.</span></li></ul><ul id="1893fb36-def5-4e7d-a663-caf07ddaf4e6" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">Keep score in your game by giving 2 points for every match and penalizing 1 point for
+every previously seen card that is involved in a mismatch.</span></li></ul><ul id="24f90aea-3993-437c-8f8a-f219c56b13f6" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">Display the score in your UI in whatever way you think looks best.</span></li></ul><ul id="d0210ac7-12ff-463d-974a-12d52820c2c0" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">Your UI should work in portrait or landscape on any iOS device. The cards can have
+any aspect ratio you’d like. This probably will not require any work on your part
+(that’s part of the power of SwiftUI), but be sure to continue to experiment with
+running on different simulators in Xcode to be sure.</span></li></ul><h2 id="31d25bd8-1a1f-470f-af23-e6aed1b804c0" class=""><strong>Hints</strong></h2><ul id="b9b5f33d-ffc8-4e53-acf2-8d226764a806" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">1. Economy is still (and always) valuable in coding, but this week is not a collection of
+one-liners (though we do pay homage to the one-liner in Required Task 5).</span></li></ul><ul id="35f190cb-b7d5-432f-bdb0-ee20bf82990f" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">2. Be careful to think carefully about what parts of your code are Model, what parts are
+ViewModel and what parts are the View. This is a significant part of this assignment.
+Remember, nothing about how the game is <em>displayed </em>should be in the Model (it’s UI
+independent), but all of the mechanics about how the game plays should be.</span></li></ul><ul id="01556035-df8c-49b3-b199-5d7c96e80540" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">3. One way to think of the number of cards in a theme is that if it is a number specified
+in the theme, then it’s that number of (pairs of) cards, but if it’s not specified somehow,
+then it’s random (but always less than the number of emoji in the theme, of course).</span></li></ul><ul id="09eb0d61-6eaa-44ef-a5d0-4e8cf2ceef9a" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">4. If you think of it that way, what sort of type would be good to represent the number
+of cards in a theme? Swift has a great type for something that is normally specified,
+but sometimes is not.</span></li></ul><ul id="fee67dfe-1f3b-4cbd-a220-51263d866b38" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">5. Your New Game button is allowed to be a Text with an onTapGesture (since you know
+how to do that) or you can use a Button (see the documentation for how to use that).
+The difference is that a Button automatically adjusts itself to look like what a button is
+supposed to look like on the platform it is on (iOS, Apple TV, Apple Watch), whereas
+a Text is always going to look like a piece of text on all platforms. Because of this,
+Button is way better.</span></li></ul><ul id="3ebffbaa-c620-4471-8b6b-85ff3ddea25b" class="to-do-list"><li><div class="checkbox checkbox-on"></div> <span class="to-do-children-checked">6. Example themes: animals (🐼 🐔 🦄 ), sports (🏀 🏈 ⚾ ), faces (😀 😢 😉 ).</span></li></ul><ul id="48a19e6c-e5eb-4787-bc58-fd232a762344" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">7. A card has “already been seen” only if it has, at some point, been face up and then is
+turned back face down. So tracking “seen” cards is probably something you’ll want to
+do when you turn a card face down.</span></li></ul><ul id="fba8ab76-01d6-46a8-866e-536c3f382d0c" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">8. If you flipped over a 🐧 + 👻 , then flipped over a ✏ + 🏀 , then flipped over two</span><p id="d1ae8ded-ceb4-4f9f-8c26-e37f1c4b5e42" class="">👻 s, your score would be 2 because you’d have scored a match (and no penalty would</p><p id="5f8ec178-89a1-4f05-b92c-773837b6f8a0" class="">be incurred for the flips involving 🐧 , ✏ or 🏀 because they have not (yet) been</p><p id="ccb31298-5653-4053-8961-07281a4b3937" class="">involved in a mismatch, nor was the 👻 ever involved in a mismatch). If you then</p><p id="f12557da-9072-459f-9432-7225576be5cd" class="">flipped over a 🐧 + 🐼 , then flipped 🏀 + 🐧 , your score would drop 3 full points</p><p id="89fddaad-7ee7-46a8-bad4-d3d696297272" class="">down to -1 overall because the 🐧 had already been seen (on the very first flip) and
+subsequently was involved in two separate mismatches (scoring -1 for each mismatch)</p><p id="1372bed8-a560-469d-b6c8-14bc3cc034c5" class="">and the 🏀 was also involved in a mismatch after already having been seen (-1). If
+you then flip 🐧 + 🐧 , you’d get 2 points for a match and be back up to 1 total point.</p></li></ul><ul id="10c02674-9bcb-4390-ae1f-d69739948dba" class="to-do-list"><li><div class="checkbox checkbox-off"></div> <span class="to-do-children-unchecked">9. You are allowed to remove all of your code from assignment 1 (since the Required
+Tasks don’t require you to preserve them). You especially will probably want to
+remove your aspect ratio code until you have the Grid working. But then it would be a
+great exercise to put it back and if it breaks your application, <em>go figure out why</em>.
+Remember that the order in which modifiers are applied to Views matters in SwiftUI.
+The slides in Lecture 3 that mention aspectRatio would be a great thing to review if
+you’re having problems with this.</span></li></ul><h2 id="93bf47de-69b5-4bf7-8220-ae0f9f10c9e7" class=""><strong>Things to Learn</strong></h2><p id="1a408655-fa16-4cf8-bcc9-6630db9ebae9" class="">Here is a partial list of concepts this assignment is intended to let you gain practice with
+or otherwise demonstrate your knowledge of.</p><ol id="b41bdb31-abd9-48af-af63-3bea68358525" class="numbered-list" start="1"><li>Reactive UI</li></ol><ol id="85bd24f0-dca8-4249-b7b9-72f115a789f8" class="numbered-list" start="2"><li>Swift5.2</li></ol><ol id="4835a224-d590-4f20-87e6-504917ac03fb" class="numbered-list" start="3"><li>Arranging UI with HStack, VStack, Spacer, Divider, etc.</li></ol><ol id="f666b691-2c71-47bd-a5fd-840c2452ecc6" class="numbered-list" start="4"><li>Handling a tap gesture (or using Button)</li></ol><ol id="75a89073-98e9-4e3b-97c3-1b462cc3158e" class="numbered-list" start="5"><li>MVVM (putting code in the proper place in your application)</li></ol><ol id="c409fbc0-9420-40f8-881f-4a417271b8a4" class="numbered-list" start="6"><li>Optionals</li></ol><p id="2841a3e8-de71-4b28-b8e8-403c51da563f" class="">PAGE 5 OF 7 ASSIGNMENT II: MORE MEMORIZE</p><p id="0edad787-1e9f-49c9-a134-f0328d401aec" class="">CS193P IOS APPLICATION DEVELOPMENT SPRING 2020</p><h2 id="ce892c31-fe7b-44a3-a056-38c9255ad004" class=""><strong>Evaluation</strong></h2><p id="9349d343-1f95-46f0-9ea4-f96498f18aae" class="">In all of the assignments this quarter, writing quality code that builds without warnings
+or errors, and then testing the resulting application and iterating until it functions
+properly is the goal.</p><p id="a68c1bdf-57b2-4ca2-8e55-13d588f6f79c" class="">Here are the most common reasons assignments are marked down:</p><ul id="2af26f4b-8112-4369-9af3-706667305ed0" class="bulleted-list"><li><strong>Project does not build.</strong></li></ul><ul id="e4099103-59e2-45f7-85c9-d4b9f70acd11" class="bulleted-list"><li><strong>One or more items in the Required Tasks section was not satisfied.</strong></li></ul><ul id="a0ac43a5-fb0e-462e-a92d-34de1f5c5a39" class="bulleted-list"><li><strong>Afundamentalconceptwasnotunderstood.</strong></li></ul><ul id="ef08f33d-96ca-4ae3-8d4c-a94408fb0bb3" class="bulleted-list"><li><strong>Project does not build without warnings.</strong></li></ul><ul id="d0324737-42c2-48ac-bd6f-c91f5f321ea4" class="bulleted-list"><li><strong>Code is visually sloppy and hard to read (e.g. indentation is not consistent, etc.).</strong></li></ul><ul id="59f1a93c-03f8-49f3-8b3b-d297779cdc20" class="bulleted-list"><li><strong>Yoursolutionisdifficult(orimpossible)forsomeonereadingthecodeto
+understand due to lack of comments, poor variable/method names, poor solution
+structure, long methods, etc.
+</strong><strong>Often students ask “how much commenting of my code do I need to do?” The answer
+is that your code must be easily and completely understandable by anyone reading it.
+You can assume that the reader knows the iOS API and knows how the Memorize
+game code from lectures 1 and 2 works, but should not assume that they already know
+your (or any) solution to the assignment.</strong></li></ul><h2 id="700d18e3-9f95-4357-8c6a-1a249dd63f9d" class=""><strong>Extra Credit</strong></h2><p id="49a0c572-9fa2-4ca8-ae29-a69b23fa5af2" class="">We try to make Extra Credit be opportunities to expand on what you’ve learned this
+week. Attempting at least some of these each week is highly recommended to get the
+most out of this course. How much Extra Credit you earn depends on the scope of the
+item in question.</p><p id="8cb6abdd-5040-47b4-a16a-260a35b95b63" class="">If you choose to tackle an Extra Credit item, mark it in your code with comments so your
+grader can find it.</p><ol id="07e540c1-6721-4826-ac61-acb689789ae3" class="numbered-list" start="1"><li>Supportagradientasthe“color”foratheme.Hint:fill()cantakeagradientasits
+argument rather than a color.</li></ol><ol id="f412e861-0872-48d0-80c7-3a9bf3f37f90" class="numbered-list" start="2"><li>Modify the scoring system to give more points for choosing cards more quickly. For
+example, maybe you get max(10 - (number of seconds since last card was chosen), 1) x
+(the number of points you would have otherwise earned or been penalized with).
+(This is just an example, be creative!). You will definitely want to familiarize yourself
+with the Date struct.</li></ol></div></article></body></html>

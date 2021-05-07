@@ -1,0 +1,698 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Lec4 Grid, Enum, Optionals</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="22bf39e1-876e-4102-947d-a78e3d6944b2" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">4️⃣</span></div><h1 class="page-title">Lec4 Grid, Enum, Optionals</h1></header><div class="page-body"><ul id="92167030-ee09-40f0-a546-21c2d92137a4" class="toggle"><li><details open=""><summary>Grid</summary><pre id="898e47d8-7882-4021-a470-6a5b7c7bb477" class="code"><code>@escaping</code></pre><p id="8ad1790b-cbb3-4b30-9600-6c2ba1db6956" class="">
+</p></details></li></ul><ul id="e3133549-8aef-4c4e-b47b-71bf26c7dd1e" class="toggle"><li><details open=""><summary>Enum</summary><p id="52b07206-f36d-4a73-8096-e9f0de054179" class="">It can only have discrete states ...</p><p id="cdf02840-dc61-4a04-9caf-f6fafc3d3b6b" class="">A value type (like <code>struct</code>), so it is copied as it is passed around.</p><pre id="acb4c3e7-8e10-4457-bf67-4b4144e65af6" class="code"><code>enum FastFoodMenuItem {
+	case hamburger(numberOfPatties: Int)
+	case fries(size: FryOrderSize)
+	case drink(brand: String, ounces: Int)
+}</code></pre><p id="4fca39b9-fe27-4d39-8290-07a0255741d5" class="">
+</p><h3 id="54403dad-37fd-4b5d-abee-7efbc72d6d50" class="">Checking an enum&#x27;s state:</h3><p id="b6bb089b-d559-41dc-9e95-3fa636a161fe" class="">An enum&#x27;s state is checked with a <code>switch</code> statement ...</p><pre id="a4be866c-dcb0-488a-836e-945dcc5eb583" class="code"><code>var menuItem = FastFoodMenuItem.hamburger(patties: 2)
+switch menuItem {
+	case .hamburger: print(&quot;burger&quot;)
+	case .fries: print(&quot;fries&quot;)
+	case .drink: print(&quot;drink&quot;)
+	case .cookie: print(&quot;cookie&quot;)
+}</code></pre><p id="8304d5d3-abe1-4ac3-9af8-6195f38c3a7b" class="">Note that we are ignoring the &quot;associated date&quot; above so far ...</p><h3 id="b34e5780-6dea-447c-97b8-d696e4df29d8" class="">Access to associated data</h3><p id="a811002e-1d7e-4bbc-856d-4533d55c93db" class="">Can be accessed using <code>let</code></p><pre id="1a47a4ee-ccbf-4222-8421-771f451cf931" class="code"><code>var menuItem = FastFoodMenuItem.drink(&quot;Coke&quot;, ounces: 32)
+switch menuItem {
+	case .hamberger(let pattyCount): print(&quot;a burger with \(pattyCount) patties!&quot;)
+	case .fries(let size): print(“a \(size) order of fries!”)
+	case .drink(let brand, let ounces): print(&quot;a \(ounces)oz \(brand)&quot;)
+	case .cookie: print(&quot;a cookie!&quot;)
+	default: print(&quot;other&quot;)
+}</code></pre><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="72166744-887e-4b99-93ec-3582d79fe223"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Note that the local variable that retrieves the associated data <span style="border-bottom:0.05em solid">can have a different name</span>. <em>(e.g. pattyCount above versus patties in the enum declaration)</em></div></figure><p id="6d8b17b1-c007-492a-98de-06bf22859683" class="">The associated value is actually just a single value that can, of course, be a <strong>tuple</strong>! So you can do all the naming tricks of a tuple when accessing associated values via switch.</p><h3 id="e3949b13-53b8-4376-89f4-cc9caf1ca0b0" class="">Store methods inside enum</h3><p id="2e468060-043b-40a8-916c-aa19c637726d" class="">In an enum&#x27;s own methods, you can test the enum&#x27;s state (and get associated data) using self ...</p><pre id="c2c46fd9-f389-4638-8bec-fa4986111fc5" class="code"><code>enum FastFoodMenuItem {
+	...
+	func isIncludedInSpecialOrder(number: Int) -&gt; Bool {
+		switch self {
+			case .hamburger(let pattyCount): return pattyCount == number
+			case .fries, .cookie: return true // a drink and cookie in every special order
+			case .drink(_, let ounces): return ounces == 16 // &amp; 16oz drink of any kind
+		}
+	}
+}</code></pre><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="b039d425-8ec8-44ec-88ab-4f9d5c56b181"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">We use <code>_</code> to represent the associated data that we don&#x27;t care about</div></figure><h3 id="02ede990-d137-4d13-8388-85a204911b72" class="">Iteration in an enumeration</h3><p id="c574a978-0dc6-4160-a7d5-f87ecf7f1240" class="">We can change it into an iterable thing using the <code>CaseIterable</code> protocol.</p><pre id="1f700e7e-8c72-4bbc-b599-c55236b7f240" class="code"><code>enum TeslaModel: CaseIterable {
+	case X
+	case S
+	case Three
+	case Y
+}
+
+for model in TeslaModel.allCases {
+	reportSalesNumbers(for: model)
+}
+
+func reportSalesNumbers(for model: TeslaModel) {
+	switch model { ... }
+}</code></pre><p id="81c44558-297e-4601-ab45-9f4403e09d02" class="">
+</p><h3 id="44819175-bf5a-4dcd-b49b-1ad0877c611b" class="">Optionals</h3><pre id="189f5731-2d64-4a87-af88-ddd68eb398a3" class="code"><code>enum Optional&lt;T&gt; { // a generic type, like Array&lt;Element&gt; or MemoryGame&lt;CardContent&gt;
+	case none
+	case some(&lt;T&gt;) // the some case has associated value of type T
+}</code></pre><p id="d4b651a6-61c8-41fb-bb34-c709efd2feb7" class="">
+</p><p id="7dbd3609-3380-417a-a4ba-8dd06d0988f6" class="">You can see that it can only have two values: is set (some) or not set (none).</p><p id="c9c7356a-61f3-4595-89bf-fc491f42bf4c" class="">In the is set case, it can have some associated data tagging along (of don’t care type T).</p><p id="a3134039-c1a4-460f-8c6e-fed5f75720ca" class="">
+</p><hr id="8e64c3ad-11bf-4fe9-b674-b8efaa6639ef"/><p id="bb967481-7803-4bf5-958c-9bd6902b6233" class=""><strong>💡 Where do we use Optional?</strong></p><p id="5be4cc2f-0f41-454f-8ae4-ef597901f55f" class="">Any time we have a value that can sometimes be &quot;not set&quot; or &quot;unspecified&quot; or &quot;undetermined&quot;.<div class="indented"><p id="7fec8747-0fdf-424f-bb44-611e3f53d3fb" class="">e.g., the return type of <code>firstIndex(matching:)</code> if the matching thing is not in the Array.</p><p id="8e0f260f-1a12-4474-b831-0a6dcc36298c" class="">e.g., an index for the currently-face-up-card in our game when the game first starts.</p></div></p><p id="bf3350e7-e0ca-4585-b834-85a2df0f5e2c" class="">This happens surprisingly often.</p><div id="1d8f99cf-5409-4eac-97a8-af3ff48b5b0c" class="column-list"><div id="a08fc901-c128-4303-bb9c-efabc9d0236d" style="width:50%" class="column"><pre id="631c67fd-e621-4ef6-a07d-a4433e830243" class="code"><code>var hello: String?
+var hello: String? = nil
+
+var hello: String? = “hello”</code></pre><p id="d27c4c06-b57c-4b16-8836-c7db22c627a1" class="">
+</p><pre id="1f50917e-f88c-4286-84b7-fb155e67dfeb" class="code"><code>let hello: String? = ...
+print(hello!)</code></pre><pre id="6db603b3-7c8f-410b-a8a3-fdd149a89eca" class="code"><code>if let safehello = hello { // to avoid crash
+	print(safehello)
+} else { // do something else }</code></pre></div><div id="e28b4500-aa11-4ad5-9baa-144fba84c03b" style="width:50%" class="column"><pre id="0173f74d-9768-465d-b95a-a3e36e93e8e8" class="code"><code>var hello: Optional&lt;String&gt; = .none
+
+
+var hello: Optional&lt;String&gt; = .some(“hello”)</code></pre><p id="591889cf-40ed-4276-9b9a-ac0ac9386694" class="">
+</p><pre id="70e6b55a-0225-47fc-be8b-7ef2dca59712" class="code"><code>switch hello {
+	case .none: // raise an exception (crash)
+	case .some(let data): print(data)
+}</code></pre><p id="58c6c996-38be-4321-bf44-388649b9a079" class="">
+</p></div></div><div id="17380431-d2fd-4f82-87bc-b2f7f8308dbd" class="column-list"><div id="eb77c654-d775-4898-9203-2b5964926ffc" style="width:50%" class="column"><h3 id="5b5d5639-2e8b-498e-9dcb-5eb1ed400395" class="">Optional defaulting</h3><pre id="a94936a3-25a3-4181-b654-63bda0f48216" class="code"><code>let x: String? = ...
+let y = x ?? &quot;foo&quot;</code></pre><p id="d54bef94-0a3d-4adc-92d5-9cc7b5a1a6e8" class="">
+</p></div><div id="991e5a01-8dfa-4189-8178-bef63464a502" style="width:50%" class="column"><p id="91637be9-eb38-46a1-a6cc-d080c3daf747" class="">
+</p><pre id="0ca3e728-bbc9-4bc5-90f0-27c52d39f71f" class="code"><code>switch x {
+	case .none: y = &quot;foo&quot;
+	case .some(let data): y = data
+}</code></pre></div></div><p id="b977eeb0-e30c-4389-bb10-0ee0ef6e1482" class="">
+</p><p id="e96627ca-23a7-454b-8904-364fce5a89f4" class="">
+</p></details></li></ul><ul id="21e58205-9c49-4f60-be45-e72e79bfa23d" class="toggle"><li><details open=""><summary></summary></details></li></ul><p id="723272b3-35db-497f-bdee-9045bdb4d7ed" class="">
+</p></div></article></body></html>
